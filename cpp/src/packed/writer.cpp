@@ -104,6 +104,11 @@ Status PackedRecordBatchWriter::Close() {
   return flushRemainingBuffer();
 }
 
+Status PackedRecordBatchWriter::AddUserMetadata(const std::string& key, const std::string& value) {
+  user_metadata_.emplace_back(key, value);
+  return Status::OK();
+}
+
 Status PackedRecordBatchWriter::flushRemainingBuffer() {
   while (!max_heap_.empty()) {
     auto max_group = max_heap_.top();
@@ -116,6 +121,7 @@ Status PackedRecordBatchWriter::flushRemainingBuffer() {
   }
   for (auto& writer : group_writers_) {
     RETURN_NOT_OK(writer->WriteGroupFieldIDList(group_field_id_list_));
+    RETURN_NOT_OK(writer->AddUserMetadata(user_metadata_));
     RETURN_NOT_OK(writer->Close());
   }
   return Status::OK();
