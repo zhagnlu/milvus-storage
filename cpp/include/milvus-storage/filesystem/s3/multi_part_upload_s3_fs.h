@@ -30,7 +30,6 @@
 #include "arrow/util/uri.h"
 #include "arrow/io/interfaces.h"
 
-using namespace arrow;
 using ::arrow::fs::FileInfo;
 using ::arrow::fs::FileInfoGenerator;
 
@@ -58,7 +57,7 @@ class MultiPartUploadS3FS : public arrow::fs::S3FileSystem {
 
   arrow::Status DeleteDirContents(const std::string& path, bool missing_dir_ok) override;
 
-  Future<> DeleteDirContentsAsync(const std::string& path, bool missing_dir_ok) override;
+  arrow::Future<> DeleteDirContentsAsync(const std::string& path, bool missing_dir_ok) override;
 
   arrow::Status DeleteRootDirContents() override;
 
