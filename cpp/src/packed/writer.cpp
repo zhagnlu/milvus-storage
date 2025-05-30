@@ -40,12 +40,12 @@ PackedRecordBatchWriter::PackedRecordBatchWriter(std::shared_ptr<arrow::fs::File
   if (paths.size() != group_indices_.size()) {
     LOG_STORAGE_ERROR_ << "Mismatch between paths number and column groups number: " << paths.size() << " vs "
                        << group_indices_.size();
-    throw runtime_error("Mismatch between paths number and column groups number");
+    throw std::runtime_error("Mismatch between paths number and column groups number");
   }
   auto field_id_list = FieldIDList::Make(schema);
   if (!field_id_list.ok()) {
     LOG_STORAGE_ERROR_ << "Failed to get field id from schema: " << schema->ToString();
-    throw runtime_error("Failed to get field id from schema: " + schema->ToString());
+    throw std::runtime_error("Failed to get field id from schema: " + schema->ToString());
   }
   group_field_id_list_ = GroupFieldIDList::Make(column_groups, field_id_list.value());
 
@@ -59,7 +59,7 @@ PackedRecordBatchWriter::PackedRecordBatchWriter(std::shared_ptr<arrow::fs::File
       group_writers_.emplace_back(std::move(writer));
     } else {
       LOG_STORAGE_ERROR_ << "Failed to initialize writer for column group " << i << ": " << status.ToString();
-      throw runtime_error("Failed to initialize writer for column group: " + status.ToString());
+      throw std::runtime_error("Failed to initialize writer for column group: " + status.ToString());
     }
   }
 }
